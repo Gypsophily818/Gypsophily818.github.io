@@ -1,10 +1,13 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
+  />
   <style>
     ul , li {
       margin: 0;padding: 0;
@@ -50,11 +53,18 @@
   </style>
 </head>
 <body>
+  <div style="margin:0 auto;width:200px">
+    <h2 style="color:pink" class=" animate__animated animate__heartBeat animate__infinite">欢迎,小谢~</h2>
+  </div>
   <ul class="u1"></ul>
   <ul class="u2"></ul>
 </body>
 <script src="./js/jquery.min.js"></script>
 <script>
+  document.body.onclick = function(){
+    alert("热烈欢迎~~");
+  }
+
   var ul = document.querySelector('ul');
   var ul1 = document.querySelector('.u1');
   var ul2 = document.querySelector('.u2');
@@ -121,14 +131,7 @@
   },2000);
 
 </script>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-  <style>
+  <!-- <style>
     ul , li {
       margin: 0;padding: 0;
       list-style: none;
@@ -241,8 +244,7 @@
       console.log(lis.length);
       
     }
-  },2000);
+  },2000); -->
 
 </script>
->>>>>>> 047141a12aa9af7170b3ea29a7d5d615cddf7767
 </html>
