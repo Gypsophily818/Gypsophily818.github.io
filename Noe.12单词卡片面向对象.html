@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+		<script src="./js/jquery.min.js"></script>
+		<style>
+			ul , li {
+				padding: 0;margin: 0;
+				list-style: none;
+			}
+			button {
+				width: 100px;
+				height: 30px;
+				padding: 5px;
+				background-color: palegreen;
+				outline: none;
+				border: none;
+				box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+				border-radius: 10px;
+			}
+			#warp {
+				font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+				width: 300px;
+				height: 350px;
+				background-color: skyblue;
+				border-radius: 10px;
+				box-shadow: 1px 0px 15px 3px rgb(62, 88, 163);
+				position: relative;
+			}
+			#warp button:hover {
+				transform: translateY(-1px);
+				box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+			}
+			#warp button:active {
+				transition: all 0.2s;
+				transform:scaleX(1.1) scaleY(1.25);
+				border:2px solid rgb(196, 110, 79);
+			}
+			#warp button:nth-of-type(1) {
+				position: absolute;
+				right: 0;
+				bottom: 0;
+			}
+			#warp button:nth-of-type(2) {
+				position: absolute;
+				left: 0;
+				bottom: 0;
+			}
+			#warp button:nth-of-type(3) {
+				background-color: rgb(180, 207, 201);
+				box-shadow: 1px 0px 15px 3px rgb(154, 225, 228);
+				width: 250px;
+				position: absolute;
+				left: 25px;
+				bottom: -50px;
+			}
+			#warp button:nth-of-type(3):active {
+				transition: all 0.1s;
+				transform:scaleX(1.1) scaleY(1.05);
+				font-size: 16px;
+				background-color: rgb(133, 174, 190);
+
+			}
+			#warp #changeColor {
+				width: 130px;
+				background: linear-gradient(to bottom, skyblue , pink ,rgb(141, 147, 182)) ;
+				color: darkslateblue;
+				position: absolute;
+				right: -165px;
+				top: 0;
+			}
+			#warp #setColor  {
+				position: absolute;
+				right: -180px;
+				top: 60px;
+			}
+			#warp audio {
+				width: 40px;
+				height: 40px;
+				display: block;
+				background-color: royalblue;
+			}
+
+			#warp audio.music  {
+				display: block;
+				height: 40px;
+				width: 300px;
+			}
+			#showword {
+				padding: 10px;
+			}
+			#showword li {
+				padding: 5px;
+			}
+			#showword :first-child{
+				text-align: center;
+				font-size: 20px;
+				font-weight: 600;
+				color: rgb(43, 121, 36);
+			}
+			#showword :last-child {
+				color: rgb(122, 114, 42);
+				font-size: 20px;
+			}
+			.audio{
+				border: 2px dashed pink;
+				border-radius: 5px;
+				padding: 5px;
+				position: absolute;
+				right: -80px;
+				top: 200px;
+			}
+			.audio img {
+				vertical-align:text-top;
+			}
+			.audio .en ,.audio .am {
+				cursor: pointer;
+			}
+		
+		</style>
+  </head>
+
+  <body>
+    <div id="warp">
+			<ul id="showword">
+				
+			</ul>
+			<button id="next">next</button>
+			<button id="previous">previous</button>
+			<button id="recordBtn">返回上次记的单词</button>
+			<button id="changeColor">设置单词卡颜色</button>
+			<progress value="5" max="255" id="setColor"></progress>
+			
+			<div class="audio">
+				<div class="en">
+					<img  src="./pic/audio.png"></img>
+					<audio id="enPlay" src="http://dict.youdao.com/dictvoice?audio=predominant"></audio>
+					<span>英音</span>
+				</div>
+
+				<hr>
+
+				<div class="am">
+					<img  src="./pic/audio.png"></img>
+					<audio id="amPlay" src=""></audio>
+					<span>美音</span>
+				</div>
+			</div>
+		</div>
+	
+		</div>
+		<script>
+			// 单词卡片
+			function WordCard(option){
+				option.cardElement = document.querySelector("#warp");
+				this.cardElement = option.cardElement;
+			// 背景颜色属性
+				this.backgroundColor = option["backgroundColor"] || 'skyblue';
+			// 数据面板
+				this.wordData = document.querySelector("#showword");
+			// 记录数据
+				this.data ;
+			// 数据地址
+				this.url = "../assets/words.json";
+			// 单词索引
+				this.index = 0;
+			// pre按钮
+				this.prevBtn = document.querySelector("#previous");
+			// next按钮
+				this.nextBtn = document.querySelector("#next");
+			// 返回上一次单词按钮
+				this.recordBtn = document.querySelector("#recordBtn");
+			// 记录上一次的索引
+				this.recordIndex;
+			// 英音按钮
+				this.en = document.querySelector('.en');
+			// 美音按钮
+				this.am = document.querySelector('.am');
+			// 获取英音 、美音播放媒体
+				this.audio_en = document.querySelector('#enPlay');
+				this.audio_am = document.querySelector('#amPlay');
+			// 英式发音URL
+				this.EnPronunciation = 'http://dict.youdao.com/dictvoice?type=1&audio=';
+			// 美式发音URL
+				this.AmPronunciation = 'http://dict.youdao.com/dictvoice?type=0&audio=';
+			}
+			// 初始化方法
+			WordCard.prototype.init = function(){
+				let _this = this;
+				this.setbackgroundColor();
+				// 请求数据
+				this.getData( this.url , function(data){
+					if(data === undefined || data.length == 0) return;
+					_this.data = data;
+					_this.showWord();
+				});
+				this.click();
+
+				// 缓存(记录单词索引)
+
+			}
+			// 设置外观背景的方法
+			WordCard.prototype.setbackgroundColor = function( color ){
+				// 设置背景颜色
+				this.cardElement.style.backgroundColor = color || this.backgroundColor ;
+			}
+			// 请求数据的方法
+			WordCard.prototype.getData = function( url , callback ){
+				let _this = this;
+				// 执行ajax读取本地文档
+					$.ajax({
+						url : url,
+						type : "get",
+						success : function (res){
+							if(res){
+								callback && callback(res);
+							}
+						},
+						error : function(err){
+							console.log(err,"请求失败");
+						}
+					});
+			}
+
+			// 显示数据的方法
+			WordCard.prototype.showWord = function(){
+				// 获取地址
+				this.audio_en.src = this.EnPronunciation + this.data[this.index].word;
+				this.audio_am.src = this.AmPronunciation + this.data[this.index].word;
+				// 打印数据
+				this.wordData.innerHTML = `<li>${this.data[this.index].word}</li>
+																	 <li>${"词义 : "+ this.data[this.index].means}</li>
+																   <li>${this.data[this.index].eg}</li>
+																  `;
+			}
+			// 按钮点击的方法
+			WordCard.prototype.click = function(){
+				let _this = this;
+				// 前一个单词
+				this.prevBtn.onclick = function(){
+					_this.index--;
+					if(_this.index < 0){
+						_this.index = _this.data.length - 1;
+					}
+					// 缓存索引
+					_this.recordData();
+					// 显示数据
+					_this.showWord();
+					// 默认读英音
+					_this.audio_en.play() ;
+				};
+
+				// 下一个单词
+				this.nextBtn.onclick = function(){
+					_this.index++;
+					if(_this.index > _this.data.length - 1){
+						_this.index = 0;
+					}
+					// 缓存索引
+					_this.recordData();
+					// 显示数据
+					_this.showWord();
+					// 默认读英音
+					_this.audio_en.play() ;
+				};
+				// 返回上一次记的单词
+				this.recordBtn.onclick = function(){
+					_this.index = localStorage.getItem("recordIndex");
+					_this.showWord();
+					console.log(_this.recordIndex);
+				}
+				// 英音
+				this.en.onclick = function(){
+					_this.audio_en.play() ;
+				};
+				// 美音
+				this.am.onclick = function(){
+					_this.audio_am.play() ;
+				};
+
+					
+
+			}
+			// 缓存数据的方法
+			WordCard.prototype.recordData = function(){
+				this.recordIndex = localStorage.setItem("recordIndex",this.index);
+			}
+
+			var card = new WordCard({ });
+			card.init();
+		</script>
+  </body>
+</html>
