@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"
-  />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
   <style>
-    ul , li {
-      margin: 0;padding: 0;
+    ul,
+    li {
+      margin: 0;
+      padding: 0;
       list-style: none;
     }
+
     body {
-      height: 800px;
-      background: linear-gradient(
-        to bottom ,
-        rgb(226 47 47 / 92%), 
-        rgb(235 94 80 / 49%),
-        rgb(34 175 233 / 54%), 
-        rgb(34 222 233 / 52%),
-        rgb(201 209 101 / 26%) );
-        overflow: hidden;
+      width: 100%;
+      height: 600px;
+      text-align: center;
+      background: linear-gradient(to bottom,
+          rgb(226 47 47 / 92%),
+          rgb(235 94 80 / 49%),
+          rgb(34 175 233 / 54%),
+          rgb(34 222 233 / 52%),
+          rgb(201 209 101 / 26%)) no-repeat;
+      overflow: hidden;
     }
+
     ul {
+      width: 100%;
       height: 300px;
       position: relative;
       display: none;
-      /* animation: start duration timing-function delay iteration-count direction fill-mode; */
     }
+
     ul li {
       position: absolute;
       width: 4px;
       height: 4px;
       border-radius: 50%;
-      background:radial-gradient(
-        30px 30px,
-        rgb(255, 255, 255) 0%,
-        rgb(98, 131, 168) 20%,
-        rgb(165, 140, 140) 60%
-      )
+      background: radial-gradient(30px 30px,
+          rgb(255, 255, 255) 0%,
+          rgb(98, 131, 168) 20%,
+          rgb(165, 140, 140) 60%)
     }
-    
+
+    .u1,
     .u2 {
       width: 100%;
       height: 300px;
@@ -50,94 +53,99 @@
       top: 0;
       z-index: 99;
     }
+
+    :root {
+      --animate-duration: 3000ms;
+      --animate-delay: 1s;
+    }
   </style>
 </head>
+
 <body>
-  <div style="margin:0 auto;width:200px;color:pink" class="show animate__animated animate__heartBeat animate__infinite">
-    
+  <div style="margin:0 auto;width:200px;color:pink" class="show animate__animated animate__hinge  animate__infinite">
   </div>
+
   <ul class="u1"></ul>
   <ul class="u2"></ul>
 </body>
 <script src="./js/jquery.min.js"></script>
-<script>
-  
-  window.setInterval(function(){
-    let datas = new Date().toLocaleTimeString();
-    let  show = document.querySelector(".show");
-    show.innerHTML = "";
-     show.append(document.createElement("p").innerHTML = "欢迎,现在时间是:"+datas)
-  },1000)
 
-  document.body.onclick = function(){
+<script>
+  window.setInterval(function () {
+    let datas = new Date().toLocaleTimeString();
+    let show = document.querySelector(".show");
+    show.innerHTML = "";
+    show.append(document.createElement("p").innerHTML = "欢迎,现在时间是:" + datas)
+  }, 1000)
+
+  document.body.onclick = function () {
     alert("我是一个无限跳出来的提示信息~~");
   }
 
-  var ul = document.querySelector('ul');
+  // var ul = document.querySelector('ul');
   var ul1 = document.querySelector('.u1');
   var ul2 = document.querySelector('.u2');
 
   var index = 1;
   var index2 = 1;
 
-  var showStart1 = setInterval(function(){
-    var lis = document.querySelectorAll('ul li');
+  var showStart1 = setInterval(function () {
+    var lis = document.querySelectorAll('body ul li');
     index++;
-    if(index%2 == 0){
+    if (index % 2 == 0) {
 
       // console.log(lis.length);
-      if(lis.length > 40){
-          for(var j = 0; j < 20 ; j++){
-            $('.u1').children().eq(j).remove();
-          }
+      if (lis.length > 40) {
+        for (var j = 0; j < 20; j++) {
+          $('.u1').children().eq(j).remove();
+        }
       }
 
-      for(let i = 0 ; i < 20 ; i++){
+      for (let i = 0; i < 20; i++) {
         var lis = document.createElement('li');
-        var randX = Math.floor(Math.random(0,1) * 1500 );
-        var randY = Math.floor(Math.random(0,1) * 300 );
+        var randX = Math.floor(Math.random(0, 1) * 300);
+        var randY = Math.floor(Math.random(0, 1) * 300);
         lis.style['left'] = randX + 'px';
         lis.style['top'] = randY + 'px';
         ul1.appendChild(lis);
       }
       $('.u1').fadeIn(500);
 
-    }else {
-        $('.u1').eq(0).fadeOut(500);
+    } else {
+      $('.u1').eq(0).fadeOut(500);
     }
-  },2000);
+  }, 2000);
 
-  var showStart2 = setInterval(function(){
+  var showStart2 = setInterval(function () {
     let lis = document.querySelectorAll('.u2 li');
     index2++;
-    console.log(index2%2 == 0);
-    if(index2%2 == 0){
+    console.log(index2 % 2 == 0);
+    if (index2 % 2 == 0) {
 
       $('ul').eq(1).stop().fadeOut(1000);
 
-    }else {
+    } else {
 
       $('ul').eq(1).fadeIn(1000);
 
-      if(lis.length > 40){
-          for(var j = 0; j < 20 ; j++){
-            $('ul').eq(1).children().eq(j).remove();
-          }
+      if (lis.length > 40) {
+        for (var j = 0; j < 20; j++) {
+          $('ul').eq(1).children().eq(j).remove();
+        }
       }
 
-      for(let i = 0 ; i < 20 ; i++){
+      for (let i = 0; i < 20; i++) {
         var creatLi = document.createElement('li');
-        var randX = Math.floor(Math.random(0,1) * 1500 );
-        var randY = Math.floor(Math.random(0,1) * 300 );
+        var randX = Math.floor(Math.random(0, 1) * 1500);
+        var randY = Math.floor(Math.random(0, 1) * 300);
         creatLi.style['left'] = randX + 'px';
         creatLi.style['top'] = randY + 'px';
         ul2.appendChild(creatLi);
       }
       console.log(lis.length);
-      
-    }
-  },2000);
 
+    }
+  }, 2000);
 </script>
-</script>
+
 </html>
