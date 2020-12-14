@@ -1,4 +1,4 @@
-## Welcome to GitHub Pages
+## Welcome to My Home Pages
 
 ## -----> [看这里呀!shineSky](https://Gypsophily818.github.io/shineStar.html) 
 ## ----->[来背单词吗?](https://Gypsophily818.github.io/worldCard.html)
@@ -37,3 +37,5 @@ Your Pages site will use the layout and styles from the Jekyll theme you have se
 ### Support or Contact
 
 Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+
+[关于vue创建项目时不能用上下箭头选配置的问题](https://blog.csdn.net/zhhhao/article/details/103971430)
